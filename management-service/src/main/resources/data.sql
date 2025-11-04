@@ -1,4 +1,4 @@
-INSERT INTO book_data (name, author, isbn, publish_date, price_zar, book_type)
+INSERT INTO book_data (name, author, isbn, publish_date, price, book_type)
 VALUES
     ('The Alchemist', 'Paulo Coelho', '9780061122415', DATE '1993-08-12', 199.99, 'Hard Cover'),
     ('Things Fall Apart', 'Chinua Achebe', '9780385474542', DATE '1958-06-17', 149.50, 'Soft Cover'),

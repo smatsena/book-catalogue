@@ -7,10 +7,13 @@ import za.co.catalogue.management.repository.BookRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BookService {
     private final BookRepository bookRepository;
+
+    public BookDto book;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -40,5 +43,24 @@ public class BookService {
     public BookDto getBookByName(String name) {
         Book book = bookRepository.findByName(name).orElseThrow(() -> new RuntimeException("Book not found"));
         return new BookDto(book.getIsbn(), book.getName(), book.getAuthor(), book.getPrice());
+    }
+
+    public BookDto addBook(BookDto book) {
+        this.book = book;
+        populateIsbn();
+        return bookRepository.addBook(book);
+    }
+
+    private void populateIsbn() {
+        String isbn = UUID.randomUUID().toString().substring(0, 13);
+        this.book.setIsbn(isbn);
+    }
+
+    public BookDto updateBook(BookDto book) {
+        return null;
+    }
+
+    public void removeBook(String isbn) {
+
     }
 }

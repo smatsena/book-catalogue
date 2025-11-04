@@ -8,6 +8,6 @@ CREATE TABLE book_data (
     publish_date  DATE                NOT NULL,
     price     DECIMAL(10,2)       NOT NULL,
     book_type     VARCHAR(32)         NOT NULL
-)
+);
 
 CREATE UNIQUE INDEX ux_book_data_isbn ON book_data(isbn);
