@@ -18,21 +18,47 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /** Admin username loaded from application configuration */
     @Value("${app.security.users[0].username}")
     private String username_admin;
+    
+    /** Admin password loaded from application configuration */
     @Value("${app.security.users[0].password}")
     private String password_admin;
 
+    /** Worker username loaded from application configuration */
     @Value("${app.security.users[1].username}")
     private String username_worker;
+    
+    /** Worker password loaded from application configuration */
     @Value("${app.security.users[1].password}")
     private String password_worker;
 
+    /** Admin role name loaded from application configuration */
     @Value("${app.security.users[0].roles}")
     private String admin_role;
+    
+    /** Worker role name loaded from application configuration */
     @Value("${app.security.users[1].roles}")
     private String worker_role;
 
+    /**
+     * Configures the security filter chain for HTTP requests.
+     * 
+     * <p>Defines the following access rules:
+     * <ul>
+     *   <li>H2 console: Public access (development only)</li>
+     *   <li>GET /api/books: Admin and Worker roles</li>
+     *   <li>POST /api/books: Admin and Worker roles</li>
+     *   <li>PATCH /api/books: Admin role only</li>
+     *   <li>DELETE /api/books: Admin role only</li>
+     *   <li>All other requests: Requires authentication</li>
+     * </ul>
+     * 
+     * @param http HttpSecurity instance to configure
+     * @return configured SecurityFilterChain
+     * @throws Exception if configuration fails
+     */
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -62,6 +88,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Creates an in-memory user details service with admin and worker users.
+     * 
+     * <p>The users are created from configuration values and passwords are
+     * encoded using the provided password encoder.
+     * 
+     * @param encoder Password encoder for hashing passwords
+     * @return UserDetailsService with configured users
+     */
     @Bean
     UserDetailsService users(PasswordEncoder encoder) {
         return new InMemoryUserDetailsManager(
@@ -70,6 +105,11 @@ public class SecurityConfig {
         );
     }
 
+    /**
+     * Provides a BCrypt password encoder for hashing user passwords.
+     * 
+     * @return BCryptPasswordEncoder instance
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
