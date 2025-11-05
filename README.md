@@ -115,10 +115,6 @@ mvn clean package
 
 #### 🪟 Windows
 
-```bash
-run-services.bat
-```
-
 The scripts will:
 
 1. Build both services
