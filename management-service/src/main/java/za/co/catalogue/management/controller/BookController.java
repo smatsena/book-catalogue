@@ -1,62 +1,59 @@
 package za.co.catalogue.management.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import za.co.catalogue.management.dto.BookDto;
+import za.co.catalogue.management.dto.*;
 import za.co.catalogue.management.service.BookService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
+@Validated
 public class BookController {
 
-    private final BookService bookService;
+    private final BookService service;
 
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
+    public BookController(BookService service) { this.service = service; }
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookDto>> getAllBooks() {
-        List<BookDto> books = bookService.getAllBooks();
-        return ResponseEntity.ok(books);
+    public List<BookResponse> getAll() {
+        return service.getAll();
     }
 
-    @GetMapping("/isbn")
-    public ResponseEntity<BookDto> findByIsbn(@NotBlank @RequestParam String isbn) {
-        BookDto book = bookService.getBookByIsbn(isbn);
-        return ResponseEntity.ok(book);
+    @GetMapping("/")
+    public BookResponse getByIsbn(@RequestParam String isbn) {
+        return service.getByIsbn(isbn);
     }
 
-    @GetMapping("/name")
-    public ResponseEntity<BookDto> findByName(@NotBlank @RequestParam String name) {
-        BookDto book = bookService.getBookByName(name);
-        return ResponseEntity.ok(book);
+    @GetMapping("/search")
+    public List<BookResponse> search(
+            @RequestParam Optional<String> name,
+            @RequestParam Optional<String> author
+    ) {
+        if (name.isPresent()) return service.searchByName(name.get());
+        if (author.isPresent()) return service.searchByAuthor(author.get());
+        return service.getAll();
     }
 
-    @GetMapping("/author")
-    public ResponseEntity<BookDto> findByAuthor(@NotBlank @RequestParam String author) {
-        BookDto book = bookService.getBookByAuthor(author);
-        return ResponseEntity.ok(book);
+    @PostMapping
+    public ResponseEntity<BookResponse> create(@Valid @RequestBody BookCreateRequest request) {
+        BookResponse created = service.create(request); // ISBN generated server-side
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<BookDto> findByAuthor(@NotBlank @RequestBody BookDto dto) {
-        return ResponseEntity.status(201).body(bookService.addBook(dto));
-    }
-
-    @PutMapping("/{isbn}")
-    public ResponseEntity<BookDto> update(@PathVariable String isbn, @Valid @RequestBody BookDto dto) {
-        dto.setIsbn(isbn);
-        return ResponseEntity.ok(bookService.updateBook(dto));
+    @PatchMapping("/{isbn}")
+    public BookResponse update(@PathVariable String isbn, @Valid @RequestBody BookUpdateRequest patch) {
+        return service.update(isbn, patch);
     }
 
     @DeleteMapping("/{isbn}")
-    public ResponseEntity<Void> deleteByIsbn(@PathVariable String isbn) {
-        bookService.removeBook(isbn);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String isbn) {
+        service.delete(isbn);
     }
 }
