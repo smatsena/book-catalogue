@@ -1,0 +1,22 @@
+INSERT INTO book_data (name, author, isbn, publish_date, price, book_type)
+VALUES
+    ('The Alchemist', 'Paulo Coelho', '9780061122415', DATE '1993-08-12', 199.99, 'HARD_COVER'),
+    ('Things Fall Apart', 'Chinua Achebe', '9780385474542', DATE '1958-06-17', 149.50, 'HARD_COVER'),
+    ('Cry, the Beloved Country', 'Alan Paton', '9780743262170', DATE '1948-03-19', 189.99, 'HARD_COVER'),
+    ('Long Walk to Freedom', 'Nelson Mandela', '9780316548182', DATE '1994-11-13', 349.00, 'HARD_COVER'),
+    ('Born a Crime', 'Trevor Noah', '9780399588198', DATE '2016-11-15', 299.00, 'EBOOK'),
+    ('Becoming', 'Michelle Obama', '9781524763138', DATE '2018-11-13', 325.00, 'HARD_COVER'),
+    ('The Power of Habit', 'Charles Duhigg', '9780812981605', DATE '2014-02-11', 279.00, 'HARD_COVER'),
+    ('Rich Dad Poor Dad', 'Robert T. Kiyosaki', '9781612680194', DATE '1997-04-08', 189.99, 'HARD_COVER'),
+    ('Atomic Habits', 'James Clear', '9780735211292', DATE '2018-10-16', 249.50, 'HARD_COVER'),
+    ('Clean Code', 'Robert C. Martin', '9780132350884', DATE '2008-08-11', 499.00, 'HARD_COVER'),
+    ('The Pragmatic Programmer', 'Andrew Hunt and David Thomas', '9780201616224', DATE '1999-10-20', 589.00, 'HARD_COVER'),
+    ('Design Patterns', 'Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides', '9780201633610', DATE '1994-10-21', 799.00, 'HARD_COVER'),
+    ('Introduction to Algorithms', 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, and Clifford Stein', '9780262046305', DATE '2022-04-05', 999.00, 'HARD_COVER'),
+    ('Deep Work', 'Cal Newport', '9781455586691', DATE '2016-01-05', 249.00, 'HARD_COVER'),
+    ('The 7 Habits of Highly Effective People', 'Stephen R. Covey', '9780743269513', DATE '1989-08-15', 299.99, 'HARD_COVER'),
+    ('The Subtle Art of Not Giving a F*ck', 'Mark Manson', '9780062457714', DATE '2016-09-13', 229.99, 'HARD_COVER'),
+    ('Can’t Hurt Me', 'David Goggins', '9781544512280', DATE '2018-11-15', 259.99, 'HARD_COVER'),
+    ('Dune', 'Frank Herbert', '9780441172719', DATE '1965-08-01', 339.99, 'HARD_COVER'),
+    ('1984', 'George Orwell', '9780451524935', DATE '1949-06-08', 159.99, 'HARD_COVER'),
+    ('The Great Gatsby', 'F. Scott Fitzgerald', '9780743273565', DATE '1925-04-10', 149.99, 'HARD_COVER');

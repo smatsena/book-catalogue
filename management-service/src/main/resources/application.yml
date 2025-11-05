@@ -1,0 +1,44 @@
+# App
+server:
+  port: 8081
+
+app:
+  security:
+    users:
+      - username: admin
+        password: admin123
+        roles: ADMIN
+      - username: librarian
+        password: b00k-rock
+        roles: USER
+
+spring:
+  application:
+    name: management-service
+
+  # H2 in-memory
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:catalogue;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: admin123
+
+  # JPA / Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  sql:
+    init:
+      mode: always
