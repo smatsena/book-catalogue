@@ -15,20 +15,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * Service implementation for book catalogue operations.
- * 
- * <p>This service implements the business logic for managing books, including:
- * <ul>
- *   <li>ISBN generation using a configurable policy</li>
- *   <li>Entity-to-DTO mapping</li>
- *   <li>Validation and error handling</li>
- *   <li>Duplicate detection based on name, author, and publish date</li>
- * </ul>
- * 
- * <p>When creating a book, if a book with the same name, author, and publish date
- * already exists, the existing book is updated rather than creating a duplicate.
- */
 @Service
 class BookServiceImpl implements BookService {
 
@@ -36,11 +22,6 @@ class BookServiceImpl implements BookService {
     private final Mapper mapper = new Mapper();
     private final IsbnPolicy isbnPolicy = new RandomIsbn13Policy();
 
-    /**
-     * Constructs a new BookServiceImpl with the specified repository.
-     * 
-     * @param repo the book repository for data access
-     */
     BookServiceImpl(BookRepository repo) {
         this.repo = repo;
     }
@@ -93,23 +74,23 @@ class BookServiceImpl implements BookService {
     public BookResponse create(BookCreateRequest request) {
         Objects.requireNonNull(request, "request");
 
-        // Check if a book with the same name, author, and publish date already exists
         Book entity = repo.findByNameAndAuthorAndPublishDate(
                         request.getName(), request.getAuthor(), request.getPublishDate())
                 .map(existing -> {
-                    // Update existing book: patch allowed fields; do NOT change ISBN
+                    // patch allowed fields; do NOT change ISBN
                     existing.setPrice(request.getPrice());
                     existing.setBookType(request.getBookType());
                     return existing;
                 })
                 .orElseGet(() -> {
-                    // Create new book with generated ISBN
                     Book b = mapper.toEntity(request);
                     b.setIsbn(allocateIsbn());
                     return b;
                 });
 
+        entity.setIsbn(allocateIsbn()); // always generate server-side
         Book saved = repo.save(entity);
+
         return mapper.toDto(saved);
     }
 
@@ -134,7 +115,6 @@ class BookServiceImpl implements BookService {
         Book existing = repo.findByIsbn(value)
                 .orElseThrow(() -> new NotFoundException("Book with ISBN '%s' not found", value));
 
-        // Apply partial update: only update non-null fields
         if (patch.getName() != null) existing.setName(patch.getName());
         if (patch.getAuthor() != null) existing.setAuthor(patch.getAuthor());
         if (patch.getPublishDate() != null) existing.setPublishDate(patch.getPublishDate());
@@ -175,7 +155,7 @@ class BookServiceImpl implements BookService {
     private String allocateIsbn() {
         String isbn = isbnPolicy.generate();
         if (repo.existsByIsbn(isbn)) {
-            // Regenerate once; loop a few times if you want stronger guarantees
+            // regenerate once; loop a few times if you want stronger guarantees
             isbn = isbnPolicy.generate();
             if (repo.existsByIsbn(isbn)) {
                 throw new ConflictException("Unable to allocate unique ISBN right now");
@@ -205,12 +185,6 @@ class BookServiceImpl implements BookService {
      * Mapper class for converting between entities and DTOs.
      */
     static final class Mapper {
-        /**
-         * Converts a BookCreateRequest DTO to a Book entity.
-         * 
-         * @param d the creation request DTO
-         * @return a new Book entity (without ISBN)
-         */
         Book toEntity(BookCreateRequest d) {
             Book b = new Book();
             b.setName(d.getName());
@@ -221,12 +195,6 @@ class BookServiceImpl implements BookService {
             return b;
         }
 
-        /**
-         * Converts a Book entity to a BookResponse DTO.
-         * 
-         * @param b the book entity
-         * @return a BookResponse DTO
-         */
         BookResponse toDto(Book b) {
             return new BookResponse(
                     b.getIsbn(), b.getName(), b.getAuthor(), b.getPublishDate(), b.getPrice(), b.getBookType()
@@ -234,15 +202,7 @@ class BookServiceImpl implements BookService {
         }
     }
 
-    /**
-     * Interface for ISBN generation policies.
-     */
     interface IsbnPolicy {
-        /**
-         * Generates a new ISBN string.
-         * 
-         * @return a generated ISBN string
-         */
         String generate();
     }
 
@@ -253,11 +213,6 @@ class BookServiceImpl implements BookService {
      * Note: This is not a real ISBN-13 format. Replace with proper ISBN-13 generation if needed.
      */
     static final class RandomIsbn13Policy implements IsbnPolicy {
-        /**
-         * Generates a random 13-character identifier.
-         * 
-         * @return a 13-character uppercase string
-         */
         @Override
         public String generate() {
             // 13-char token; replace with real ISBN-13 if needed

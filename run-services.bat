@@ -1,71 +1,39 @@
+:: This doesn't work, for some reason the web-service doesn't find the jsp.
+
 @echo off
 setlocal enabledelayedexpansion
 
-echo ============================================
-echo Building and Starting Book Catalogue Services
-echo ============================================
-echo.
+:: ==== CONFIG ====
+set MGMT_PORT=8081
+set WEB_PORT=8082
+set ROOT=%~dp0
+set LOG_DIR=%ROOT%logs
+if not exist "%LOG_DIR%" mkdir "%LOG_DIR%"
 
-REM Build Management Service
-echo [1/4] Building Management Service...
-cd /d %~dp0management-service
-call mvn clean package -DskipTests
+set MGMT_JAR=%ROOT%management-service\target\management-service-1.0-SNAPSHOT.jar
+set WEB_JAR=%ROOT%web-service\target\web-service-1.0-SNAPSHOT.jar
+
+echo Building services...
+call mvn -q -DskipTests clean package
+if errorlevel 1 exit /b 1
+
+echo Starting Management Service on %MGMT_PORT%...
+start "Management Service" cmd /k ^
+ "java -Dserver.port=%MGMT_PORT% -jar "%MGMT_JAR%" >> "%LOG_DIR%\management.log" 2>&1"
+
+echo Starting Web Service on %WEB_PORT%...
+start "Web Service" cmd /k ^
+ "java -Dserver.port=%WEB_PORT% -jar "%WEB_JAR%" >> "%LOG_DIR%\web.log" 2>&1"
+
+echo Waiting for web-service to start...
+powershell -Command ^
+ "for($i=0;$i -lt 60;$i++){try{(Invoke-WebRequest http://localhost:%WEB_PORT%/actuator/health -UseBasicParsing)>$null;exit 0}catch{Start-Sleep 1}}exit 1"
+
 if errorlevel 1 (
-    echo ERROR: Failed to build Management Service
-    pause
-    exit /b 1
-)
-echo Management Service built successfully.
-echo.
-
-REM Build Web Service
-echo [2/4] Building Web Service...
-cd /d %~dp0web-service
-call mvn clean package -DskipTests
-if errorlevel 1 (
-    echo ERROR: Failed to build Web Service
-    pause
-    exit /b 1
-)
-echo Web Service built successfully.
-echo.
-
-REM Set JAR file paths
-set MANAGEMENT_JAR=%~dp0management-service\target\management-service-1.0-SNAPSHOT.jar
-set WEB_JAR=%~dp0web-service\target\web-service-1.0-SNAPSHOT.jar
-
-REM Verify JAR files exist
-if not exist "%MANAGEMENT_JAR%" (
-    echo ERROR: Management Service JAR not found at %MANAGEMENT_JAR%
-    pause
-    exit /b 1
+  echo Web service health check failed. Check logs.
+) else (
+  echo Opening browser...
+  start "" "http://localhost:%WEB_PORT%/books"
 )
 
-if not exist "%WEB_JAR%" (
-    echo ERROR: Web Service JAR not found at %WEB_JAR%
-    pause
-    exit /b 1
-)
-
-echo [3/4] Starting Management Service on port 8081...
-start "Management Service (Port 8081)" cmd /k "cd /d %~dp0 && java -jar "%MANAGEMENT_JAR%""
-
-REM Wait a few seconds for the management service to start
-echo Waiting for Management Service to initialize...
-timeout /t 5 /nobreak >nul
-
-echo [4/4] Starting Web Service on port 8082...
-start "Web Service (Port 8082)" cmd /k "cd /d %~dp0 && java -jar "%WEB_JAR%""
-
-echo.
-echo ============================================
-echo Both services are starting...
-echo ============================================
-echo Management Service: http://localhost:8081
-echo Web Service: http://localhost:8082
-echo.
-echo Services are running in separate windows.
-echo Close those windows or press Ctrl+C to stop them.
-echo.
-pause
-
+echo Done.

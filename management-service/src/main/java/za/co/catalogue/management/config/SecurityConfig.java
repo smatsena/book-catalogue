@@ -18,27 +18,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    /** Admin username loaded from application configuration */
     @Value("${app.security.users[0].username}")
     private String username_admin;
-    
-    /** Admin password loaded from application configuration */
     @Value("${app.security.users[0].password}")
     private String password_admin;
 
-    /** Worker username loaded from application configuration */
     @Value("${app.security.users[1].username}")
     private String username_worker;
-    
-    /** Worker password loaded from application configuration */
     @Value("${app.security.users[1].password}")
     private String password_worker;
 
-    /** Admin role name loaded from application configuration */
     @Value("${app.security.users[0].roles}")
     private String admin_role;
-    
-    /** Worker role name loaded from application configuration */
     @Value("${app.security.users[1].roles}")
     private String worker_role;
 
