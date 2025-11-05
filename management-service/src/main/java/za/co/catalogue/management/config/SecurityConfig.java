@@ -44,8 +44,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 // ---- public endpoints ----
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/actuator/health", "/actuator/health/**").permitAll()
-               // .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                //.antMatchers("/actuator/health", "/actuator/health/**").permitAll()
+                //.antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                 // ---- books API (role-based) ----
                 .antMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole(worker_role, admin_role)
