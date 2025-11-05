@@ -15,6 +15,19 @@ It’s structured to highlight best practices in **service separation**, **secur
 
 ---
 
+## 🧰 Postman Collection
+
+You can test all API endpoints using the ready-to-import Postman collection below:
+
+👉 **[Book Catalogue API Collection (Postman)]**
+
+(https://smatsena-63b4ef1d-7877888.postman.co/workspace/Sarah's-Workspace~8564e7a7-599b-4a66-8f9f-c361c05dbd9a/collection/49653187-bc0e1581-79dc-4611-ae84-7c7c645c81e3?action=share&creator=49653187)
+
+This collection includes:
+- Preconfigured authentication (Basic Auth)
+- Sample payloads for all CRUD endpoints
+- Environment variables for `base_url`, `username`, and `password`
+
 ## 🏗️ Architecture  
 
 ```
