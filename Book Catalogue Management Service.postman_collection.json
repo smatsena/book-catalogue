@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "bc0e1581-79dc-4611-ae84-7c7c645c81e3",
+		"name": "Book Catalogue Management Service",
+		"description": "This collection provides a set of endpoints to interact with the **Book Catalogue Management Service**, a Spring Boot application running on [<b>http://localhost:8081</b>](https://null).\n\nThe service exposes RESTful APIs that view, search, and manage book data stored in an in-memory H2 database.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "49653187",
+		"_collection_link": "https://smatsena-63b4ef1d-7877888.postman.co/workspace/Sarah's-Workspace~8564e7a7-599b-4a66-8f9f-c361c05dbd9a/collection/49653187-bc0e1581-79dc-4611-ae84-7c7c645c81e3?action=share&source=collection_link&creator=49653187"
+	},
+	"item": [
+		{
+			"name": "Get All Books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8081/api/books/all"
+			},
+			"response": []
+		},
+		{
+			"name": "Find By Isbn",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/books/?isbn=9780385474542",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"books",
+						""
+					],
+					"query": [
+						{
+							"key": "isbn",
+							"value": "9780385474542"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Book",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/books/search?name=Clean Architecture",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"books",
+						"search"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Clean Architecture"
+						},
+						{
+							"key": "author",
+							"value": "Cal Newport",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Clean Architecture\",\r\n  \"author\": \"Robert C. Martin\",\r\n  \"publishDate\": \"2017-09-20\",\r\n  \"price\": 599.99,\r\n  \"bookType\": \"EBOOK\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8081/api/books/"
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"publishDate\": \"2018-09-20\",\r\n  \"price\": 599.99,\r\n  \"bookType\": \"HARD_COVER\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8081/api/books/11B0913B1D494"
+			},
+			"response": []
+		},
+		{
+			"name": "Remove",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:8081/api/books/11B0913B1D494"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": {
+			"password": "admin123",
+			"username": "admin"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
