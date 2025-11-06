@@ -32,15 +32,15 @@ This collection includes:
 
 ```
 
-┌──────────────────────────┐        HTTP (REST)        ┌──────────────────────────┐
-│        Web Service       │ ───────────────────────▶  │     Management Service    │
-│  Port 8082 (Frontend)    │                          │  Port 8081 (Backend API)  │
-│  JSP Views + Controllers │                          │  JPA + H2 + Validation    │
+┌──────────────────────────┐        HTTP (REST)       ┌──────────────────────────┐
+│        Web Service       │ ───────────────────────▶ │     Management Service   │
+│  Port 8082 (Frontend)    │                          │  Port 8081 (Backend API) │
+│  JSP Views + Controllers │                          │  JPA + H2 + Validation   │
 └──────────────────────────┘                          └──────────────────────────┘
-│
-▼
-┌──────────────────────┐
-│ H2 In-Memory Database │
+                                                                    |
+                                                                    |
+┌──────────────────────┐ <------------------------------------------|                                             
+│ H2 In-Memory Database│
 └──────────────────────┘
 
 ```
